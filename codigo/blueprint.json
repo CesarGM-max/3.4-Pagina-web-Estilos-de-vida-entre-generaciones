@@ -1,0 +1,161 @@
+{
+	"name": "Generaciones_Equipo1",
+	"flow": [
+		{
+			"id": 1,
+			"module": "gateway:CustomWebHook",
+			"version": 1,
+			"parameters": {
+				"hook": 2999319,
+				"maxResults": 1
+			},
+			"mapper": {},
+			"metadata": {
+				"designer": {
+					"x": 0,
+					"y": 0
+				},
+				"restore": {
+					"parameters": {
+						"hook": {
+							"data": {
+								"editable": "true"
+							},
+							"label": "Generaciones_Equipo1"
+						}
+					}
+				},
+				"parameters": [
+					{
+						"name": "hook",
+						"type": "hook:gateway-webhook",
+						"label": "Webhook",
+						"required": true
+					},
+					{
+						"name": "maxResults",
+						"type": "number",
+						"label": "Maximum number of results"
+					}
+				]
+			}
+		},
+		{
+			"id": 2,
+			"module": "ai-local-agent:RunLocalAIAgent",
+			"version": 0,
+			"parameters": {
+				"makeConnectionId": 10771262
+			},
+			"mapper": {
+				"files": [],
+				"message": "ABUELO/A:\n{{1.abuelo}}\n\nPADRE/MADRE:\n{{1.padre}}\n\nAMIGO/A:\n{{1.amigo}}",
+				"threadId": "",
+				"outputType": "text",
+				"tokenLimit": "50",
+				"modelConfig": {
+					"timeout": "",
+					"recursionLimit": "300",
+					"aiCompactionEnabled": true,
+					"iterationsFromHistoryCount": "10"
+				},
+				"defaultModel": "medium",
+				"systemPrompt": "Eres un analista de estilos de vida y consumo para alumnos de Desarrollo Sustentable del TecNM.\nRecibirás las respuestas de tres entrevistas (abuelo/a, padre/madre y amigo/a) a las mismas 8 preguntas sobre consumo.\nUsa ÚNICAMENTE lo que dicen las respuestas; no inventes datos ni supongas cosas que no se mencionan.\n\nResponde en texto plano (sin asteriscos, sin markdown), en español, con este formato:\n\nCOMPARACIÓN POR TEMA\nComida: [diferencias entre las 3 generaciones en 1 línea]\nRopa: [...]\nElectrónicos: [...]\nTransporte: [...]\nBasura: [...]\nDesechables: [...]\nAgua: [...]\nVivir bien: [...]\n\nANÁLISIS\n[4 líneas máximo: qué hábitos eran más sustentables antes, cuáles son mejores hoy y qué cambió en la sociedad para explicarlo]\n\nCONCLUSIONES\n1. [conclusión]\n2. [conclusión]\n3. [una acción concreta que la generación actual podría retomar de las anteriores]",
+				"promptCaching": "none",
+				"fallbackEnabled": false
+			},
+			"metadata": {
+				"designer": {
+					"x": 300,
+					"y": 0
+				},
+				"restore": {
+					"expect": {
+						"files": {
+							"mode": "chose"
+						},
+						"outputType": {
+							"label": "Text"
+						},
+						"defaultModel": {
+							"mode": "chose",
+							"label": "MediumModel: gpt-5-nano. Reasoning: low. A balanced, quick choice for clearly defined tasks needing reliable answers rather than deep analysis"
+						},
+						"promptCaching": {
+							"label": "Automatic (always on)"
+						}
+					},
+					"parameters": {
+						"makeConnectionId": {
+							"data": {
+								"scoped": "true",
+								"connection": "ai-provider"
+							},
+							"label": "Make's AI Provider (default)"
+						}
+					}
+				},
+				"parameters": [
+					{
+						"name": "makeConnectionId",
+						"type": "account:ai-provider,openai-gpt-3,anthropic-claude,gemini-ai-q9zyjp,ai-agent-foundry-openai,ai-agent-foundry-non-openai,mistral-ai,cohere,groq,ai-agent-xai,amazon-bedrock,ai-agent-openai-compatible",
+						"label": "Connection",
+						"required": true
+					}
+				]
+			}
+		},
+		{
+			"id": 3,
+			"module": "gateway:WebhookRespond",
+			"version": 1,
+			"parameters": {},
+			"mapper": {
+				"body": "{{2.response}}",
+				"status": "200",
+				"headers": [
+					{
+						"key": "Content-Type",
+						"value": "text/plain; charset=utf-8"
+					},
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": "*"
+					}
+				]
+			},
+			"metadata": {
+				"designer": {
+					"x": 600,
+					"y": 0
+				},
+				"advanced": true
+			}
+		}
+	],
+	"metadata": {
+		"instant": true,
+		"version": 1,
+		"scenario": {
+			"roundtrips": 1,
+			"maxErrors": 3,
+			"autoCommit": true,
+			"autoCommitTriggerLast": true,
+			"sequential": false,
+			"confidential": false,
+			"dataloss": false,
+			"dlq": false,
+			"freshVariables": false
+		},
+		"designer": {
+			"orphans": [],
+			"samples": {
+				"1": {
+					"amigo": "",
+					"padre": "",
+					"abuelo": ""
+				}
+			}
+		}
+	}
+}
